@@ -6,6 +6,7 @@ import com.llwiseSaying.Util.Vaildation;
 import com.llwiseSaying.WiseSaying;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -33,18 +34,33 @@ public class WiseSayingService {
         return id-1;
     }
 
-    public List<String> getWiseSayingList() {
+    public List<String> getWiseSayingList(String keywordType,String keyword) {
         List<String> wiseSayingList=new ArrayList<>();
-
+        String searchResult="";
+        String result="";
         for (Map.Entry<Integer, WiseSaying> entry : wiseSayings.entrySet()) {
-            wiseSayingList.add(entry.getValue().toString());
+            result=entry.getValue().toString();
+
+            if(keywordType.equals("author")){ searchResult=entry.getValue().getWriter(); }
+            if(keywordType.equals("content")){ searchResult=entry.getValue().getContent(); }
+            if(containKeyword(keyword,searchResult)) {
+                wiseSayingList.add(result);
+            }
+
         }
+
+        Collections.reverse(wiseSayingList);
 
         return wiseSayingList;
     }
 
+    public boolean containKeyword(String keyword,String searchResult) {
+        return keyword.equals("none") || searchResult.contains(keyword);
+    }
+
+
     public int containId(String cmd) {
-        int id=convertData.splitData(cmd);
+        int id=convertData.splitDeleteAndModifyCmd(cmd);
         vaildation.vaildationId(id,wiseSayings);
         return id;
     }
@@ -82,6 +98,13 @@ public class WiseSayingService {
         wiseSayingRepository.saveId(id-1);
     }
 
+    public boolean containSerachKeyword(String cmd) {
 
+        return !cmd.equals("목록");
+    }
+
+    public String[] separateKeywordTypeAndKeyword(String cmd) {
+        return convertData.splitSearchCmd(cmd);
+    }
 
 }

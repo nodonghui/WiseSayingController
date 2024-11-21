@@ -1,4 +1,5 @@
 import com.llwiseSaying.App;
+import com.llwiseSaying.Util.ConvertData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +10,7 @@ import java.io.IOException;
 
 import static com.llwiseSaying.Repository.WiseSayingRepository.DBdirectoryPath;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 public class workspace {
 
@@ -54,5 +56,17 @@ public class workspace {
                 .contains("작가(기존) : 작자미상")
                 .contains("1번 명언이 수정되었습니다")
                 .contains("1 / 안녕로봇 / 안녕 안녕");
+    }
+
+    @Test
+    @DisplayName("convetData")
+    void convertDataTest() {
+        ConvertData convertData=new ConvertData();
+
+        String cmd="목록?keywordType=author&keyword=작자";
+        String[] actualArray=convertData.splitSearchCmd(cmd);
+        String[] expectedArray={"author","작자"};
+
+        assertArrayEquals(expectedArray, actualArray, "The arrays are not equal!");
     }
 }

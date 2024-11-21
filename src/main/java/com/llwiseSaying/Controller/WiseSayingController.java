@@ -30,7 +30,7 @@ public class WiseSayingController {
         if(inputValue ==null) { state=State.EXIT; }
         if(inputValue.equals("종료")) { exitProcess(); state= State.EXIT;}
         if(inputValue.equals("등록")) { enrollProcess(); }
-        if(inputValue.equals("목록")) { viewProcess(); }
+        if(inputValue.startsWith("목록")) { viewProcess(); }
         if(inputValue.startsWith("삭제")) { deleteProcess(); }
         if(inputValue.startsWith("수정")) { modifyProcess(); }
         if(inputValue.equals("초기화")) { resetProcess(); state=State.EXIT; }
@@ -56,10 +56,34 @@ public class WiseSayingController {
     }
 
     void viewProcess() {
+
+        String cmd=inputValue;
+        String keywordType="none";
+        String keyword="none";
+        String [] splitData;
+        //목록?searchKeyword?page=3
+        if(wiseSayingService.containSerachKeyword(cmd)) {
+            try {
+                splitData=wiseSayingService.separateKeywordTypeAndKeyword(cmd);
+                //index 0 -> type index 1 -> keyword
+                keywordType=splitData[0];
+                keyword=splitData[1];
+                System.out.println("---------------------");
+                System.out.println("검색타입 : "+keywordType);
+                System.out.println("검색어 : "+keyword);
+                System.out.println("---------------------");
+
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+        }
+
+
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
 
-        List<String> wiseSayingList=wiseSayingService.getWiseSayingList();
+        List<String> wiseSayingList=wiseSayingService.getWiseSayingList(keywordType,keyword);
         wiseSayingList.stream()
                 .forEach(s -> System.out.println(s));
     }
