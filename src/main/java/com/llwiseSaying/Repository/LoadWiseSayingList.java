@@ -9,12 +9,14 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.llwiseSaying.Repository.WiseSayingRepository.DBdirectoryPath;
+
 public class LoadWiseSayingList {
 
     public Map<Integer, WiseSaying> loadWiseSayings() {
 
-        String directoryPath = "db/wiseSaying";
-        File directory = new File(directoryPath);
+
+        File directory = new File(DBdirectoryPath);
         Map<Integer,WiseSaying> wiseSayings=new LinkedHashMap<>();
 
         File[] files = directory.listFiles();

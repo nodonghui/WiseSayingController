@@ -2,10 +2,13 @@ package com.llwiseSaying.Repository;
 
 import java.io.*;
 
+import static com.llwiseSaying.Repository.WiseSayingRepository.DBdirectoryPath;
+
+
 public class IdGenerator {
 
     public void makeFile(int id) {
-        String filePath = "db/wiseSaying/lastId.txt";
+        String filePath = DBdirectoryPath + "/lastId.txt";
         String content = String.valueOf(id);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
@@ -18,11 +21,11 @@ public class IdGenerator {
     }
 
     public int loadFile() {
-        String directoryPath = "db/wiseSaying";
+
         String fileName="lastId.txt";
-        File file = new File(directoryPath, fileName);
+        File file = new File(DBdirectoryPath, fileName);
         if (file.exists() && file.isFile()) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(directoryPath+"/"+fileName))) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(DBdirectoryPath+"/"+fileName))) {
                 String line;
                 line = reader.readLine();
                 //마지막 일련번호 다음 부터 등록해야함

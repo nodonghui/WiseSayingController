@@ -2,11 +2,14 @@ package com.llwiseSaying.Repository;
 
 import java.io.File;
 
+import static com.llwiseSaying.Repository.WiseSayingRepository.DBdirectoryPath;
+
+
 public class DatabaseReset {
 
     public void reset() {
-        String directoryPath = "db/wiseSaying";
-        File directory = new File(directoryPath);
+
+        File directory = new File(DBdirectoryPath);
 
         if (deleteDirectory(directory)) {
             System.out.println("데이터베이스가 성공적으로 삭제되었습니다!");

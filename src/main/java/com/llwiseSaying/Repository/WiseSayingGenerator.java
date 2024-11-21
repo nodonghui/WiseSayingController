@@ -8,11 +8,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
+import static com.llwiseSaying.Repository.WiseSayingRepository.DBdirectoryPath;
+
 public class WiseSayingGenerator {
 
     public void wirteFile(WiseSaying wiseSaying) {
         int id=wiseSaying.getId();
-        String filePath = "db/wiseSaying/"+String.valueOf(id)+".json";
+        String filePath =  DBdirectoryPath +"/"+String.valueOf(id)+".json";
         String content =makeJsonContent(wiseSaying);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
@@ -62,9 +64,9 @@ public class WiseSayingGenerator {
     }
 
     public void deleteFile(int id) {
-        String directoryPath="db/wiseSaying";
+
         String fileNameToDelete=String.valueOf(id)+".json";
-        File fileToDelete = new File(directoryPath, fileNameToDelete);
+        File fileToDelete = new File(DBdirectoryPath, fileNameToDelete);
 
         fileToDelete.delete();
     }

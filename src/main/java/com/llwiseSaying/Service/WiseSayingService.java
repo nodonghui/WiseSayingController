@@ -1,6 +1,8 @@
 package com.llwiseSaying.Service;
 
 import com.llwiseSaying.Repository.WiseSayingRepository;
+import com.llwiseSaying.Util.ConvertData;
+import com.llwiseSaying.Util.Vaildation;
 import com.llwiseSaying.WiseSaying;
 
 import java.util.ArrayList;
@@ -9,9 +11,12 @@ import java.util.Map;
 
 public class WiseSayingService {
 
-    static WiseSayingRepository wiseSayingRepository=new WiseSayingRepository();
-    static Map<Integer, WiseSaying> wiseSayings;
-    static int id;
+    public  WiseSayingRepository wiseSayingRepository=new WiseSayingRepository();
+    Vaildation vaildation=new Vaildation();
+    ConvertData convertData=new ConvertData();
+
+    Map<Integer, WiseSaying> wiseSayings;
+    int id;
     public void init() {
         id= wiseSayingRepository.loadId();
         wiseSayings=wiseSayingRepository.loadWiseSays();
@@ -39,8 +44,8 @@ public class WiseSayingService {
     }
 
     public int containId(String cmd) {
-        int id=splitData(cmd);
-        vaildationId(id,wiseSayings);
+        int id=convertData.splitData(cmd);
+        vaildation.vaildationId(id,wiseSayings);
         return id;
     }
 
@@ -53,20 +58,6 @@ public class WiseSayingService {
     }
 
 
-    void vaildationId(int id,Map<Integer, WiseSaying> wiseSayings) {
-        if(!wiseSayings.containsKey(id)) {
-            throw new IllegalArgumentException(id+"번 명언은 존재하지 않습니다.");
-        }
-    }
-
-    public int splitData(String cmd) {
-        String[] splitData1=cmd.split("\\?");
-        if(splitData1.length !=2) {throw new IllegalArgumentException("삭제 명령어 형식을 맞춰주세요.");}
-        String[] splitData2=splitData1[1].split("=");
-        if(splitData2.length !=2) {throw  new IllegalArgumentException("삭제 명령어 형식을 맞춰주세요");}
-
-        return Integer.parseInt(splitData2[1]);
-    }
 
     public WiseSaying findWiseSaying(int id) {
         return wiseSayings.get(id);

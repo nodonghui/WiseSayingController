@@ -11,25 +11,25 @@ import java.util.Map;
 
 public class WiseSayingController {
 
-    static WiseSayingService wiseSayingService=new WiseSayingService();
+    public WiseSayingService wiseSayingService=new WiseSayingService();
 
-    static String inputValue;
-    static BufferedReader br;
-    public void pragrarmStart() throws IOException {
+    String inputValue;
+    BufferedReader br;
+    public void run() throws IOException {
 
         System.out.println("== 명언 앱 ==");
+        System.out.println("명령어 -> 종료, 등록, 목록, 삭제, 수정, 초기화");
+        System.out.println("삭제와 수정 명령어 형식 ( 삭제?id=1 )");
         init();
 
         while(true) {
 
             System.out.print("명령) ");
             inputValue = br.readLine();
-            inputValue=inputValue.trim();
 
-            if(inputValue.equals("종료")) {
-                wiseSayingService.saveId();
-                break;
-            }
+            if(inputValue ==null) { break; }
+
+            if(inputValue.equals("종료")) { exitProcess(); break; }
             if(inputValue.equals("등록")) { enrollProcess(); }
             if(inputValue.equals("목록")) { viewProcess(); }
             if(inputValue.startsWith("삭제")) { deleteProcess(); }
@@ -44,7 +44,7 @@ public class WiseSayingController {
         wiseSayingService.init();
     }
 
-    public static void enrollProcess() throws IOException {
+    void enrollProcess() throws IOException {
         System.out.print("명언 : ");
         String content=br.readLine();
         System.out.print("작가 : ");
@@ -55,7 +55,7 @@ public class WiseSayingController {
 
     }
 
-    public static void viewProcess() {
+    void viewProcess() {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
 
@@ -64,7 +64,7 @@ public class WiseSayingController {
                 .forEach(s -> System.out.println(s));
     }
 
-    public static void deleteProcess() {
+    void deleteProcess() {
         String cmd=inputValue;
 
         try {
@@ -75,7 +75,7 @@ public class WiseSayingController {
 
 
         } catch (NumberFormatException e) {
-            System.out.println("삭제 명령어 형식을 맞춰주세요");
+            System.out.println(e.getMessage());
         }
         catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -83,7 +83,7 @@ public class WiseSayingController {
 
     }
 
-    public static void modifyProcess() {
+    void modifyProcess() {
         String cmd=inputValue;
 
         try {
@@ -102,7 +102,7 @@ public class WiseSayingController {
             //수정된 내용 db반영
 
         } catch (NumberFormatException e) {
-            System.out.println("삭제 명령어 형식을 맞춰주세요");
+            System.out.println(e.getMessage());
         }
         catch (IllegalArgumentException | IOException e) {
             System.out.println(e.getMessage());
@@ -110,12 +110,17 @@ public class WiseSayingController {
 
     }
 
-    public void resetProcess() {
+    void resetProcess() {
         wiseSayingService.reset();
 
     }
 
-    public void saveId() {
+    void exitProcess() {
+        wiseSayingService.saveId();
+        System.out.println("프로그램 종료");
+    }
+
+    void saveId() {
         wiseSayingService.saveId();
     }
 

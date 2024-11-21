@@ -10,11 +10,11 @@ public class Application {
     public static void main(String[] args) {
 
         try {
-            wiseSayingController.pragrarmStart();
+            wiseSayingController.run();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
 
-        System.out.println("프로그램 종료");
+
     }
 }

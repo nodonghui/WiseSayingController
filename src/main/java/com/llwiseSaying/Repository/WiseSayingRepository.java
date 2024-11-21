@@ -6,10 +6,12 @@ import java.util.Map;
 
 public class WiseSayingRepository {
 
-    static IdGenerator idGenerator=new IdGenerator();
-    static WiseSayingGenerator wiseSayingGenerator=new WiseSayingGenerator();
-    static LoadWiseSayingList loadWiseSayingList=new LoadWiseSayingList();
-    static DatabaseReset databaseReset=new DatabaseReset();
+    IdGenerator idGenerator=new IdGenerator();
+    WiseSayingGenerator wiseSayingGenerator=new WiseSayingGenerator();
+    LoadWiseSayingList loadWiseSayingList=new LoadWiseSayingList();
+    DatabaseReset databaseReset=new DatabaseReset();
+
+    public static String DBdirectoryPath = "db/wiseSaying";
 
     public int loadId() {
 
