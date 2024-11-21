@@ -1,5 +1,5 @@
 
-import com.llwiseSaying.Controller.WiseSayingController;
+import com.llwiseSaying.App;
 import static com.llwiseSaying.Repository.WiseSayingRepository.DBdirectoryPath;
 
 import java.io.ByteArrayOutputStream;
@@ -21,13 +21,13 @@ public class WiseSayingControllerTest {
 
     @BeforeEach
     void beforeInit(){
-        output = AppTest.setOutToByteArray();
+        output = AppUtil.setOutToByteArray();
         DBdirectoryPath="db/test/wiseSaying";
     }
 
     @AfterEach()
     void afterInit() {
-        AppTest.clearSetOutToByteArray(output);
+        AppUtil.clearSetOutToByteArray(output);
         DBdirectoryPath="db/wiseSaying";
     }
 
@@ -44,10 +44,10 @@ public class WiseSayingControllerTest {
                 초기화
                 """;
 
-        AppTest.setSystemIn(simulatedInput);
+        AppUtil.setSystemIn(simulatedInput);
 
-        WiseSayingController controller = new WiseSayingController();
-        controller.run();
+        App app=new App();
+        app.run();
         String capturedOutput = output.toString();
 
         assertThat(capturedOutput)
@@ -57,23 +57,7 @@ public class WiseSayingControllerTest {
 
     }
 
-    @Test
-    @DisplayName("종료 테스트")
-    void testExit() throws IOException {
-        String simulatedInput="""
-                종료
-                """;
 
-        AppTest.setSystemIn(simulatedInput);
-
-        WiseSayingController controller = new WiseSayingController();
-        controller.run();
-        String capturedOutput = output.toString();
-
-        assertThat(capturedOutput)
-                .contains("프로그램 종료");
-
-    }
 
     @Test
     @DisplayName("목록 테스트")
@@ -86,10 +70,10 @@ public class WiseSayingControllerTest {
                 초기화
                 """;
 
-        AppTest.setSystemIn(simulatedInput);
+        AppUtil.setSystemIn(simulatedInput);
 
-        WiseSayingController controller = new WiseSayingController();
-        controller.run();
+        App app=new App();
+        app.run();
         String capturedOutput = output.toString();
 
 
@@ -111,10 +95,10 @@ public class WiseSayingControllerTest {
                 초기화
                 """;
 
-        AppTest.setSystemIn(simulatedInput);
+        AppUtil.setSystemIn(simulatedInput);
 
-        WiseSayingController controller = new WiseSayingController();
-        controller.run();
+        App app=new App();
+        app.run();
         String capturedOutput = output.toString();
 
 
@@ -135,10 +119,10 @@ public class WiseSayingControllerTest {
                 초기화
                 """;
 
-        AppTest.setSystemIn(simulatedInput);
+        AppUtil.setSystemIn(simulatedInput);
 
-        WiseSayingController controller = new WiseSayingController();
-        controller.run();
+        App app=new App();
+        app.run();
         String capturedOutput = output.toString();
 
 
@@ -162,10 +146,10 @@ public class WiseSayingControllerTest {
                 초기화
                 """;
 
-        AppTest.setSystemIn(simulatedInput);
+        AppUtil.setSystemIn(simulatedInput);
 
-        WiseSayingController controller = new WiseSayingController();
-        controller.run();
+        App app=new App();
+        app.run();
         String capturedOutput = output.toString();
 
 
@@ -188,16 +172,34 @@ public class WiseSayingControllerTest {
                 초기화
                 """;
 
-        AppTest.setSystemIn(simulatedInput);
+        AppUtil.setSystemIn(simulatedInput);
 
-        WiseSayingController controller = new WiseSayingController();
-        controller.run();
+        App app=new App();
+        app.run();
         String capturedOutput = output.toString();
 
 
         assertThat(capturedOutput)
                 .contains("4번 명언은 존재하지 않습니다.")
                 .contains("명령어 형식을 맞춰주세요.");
+
+    }
+
+    @Test
+    @DisplayName("종료 테스트")
+    void testExit() throws IOException {
+        String simulatedInput="""
+                종료
+                """;
+
+        AppUtil.setSystemIn(simulatedInput);
+
+        App app=new App();
+        app.run();
+        String capturedOutput = output.toString();
+
+        assertThat(capturedOutput)
+                .contains("프로그램 종료");
 
     }
 }

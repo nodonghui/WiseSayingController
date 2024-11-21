@@ -6,15 +6,9 @@ import java.io.IOException;
 
 public class Application {
 
-    static WiseSayingController wiseSayingController=new WiseSayingController();
-    public static void main(String[] args) {
+    static App app=new App();
+    public static void main(String[] args) throws IOException {
 
-        try {
-            wiseSayingController.run();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
-
-
+        app.run();
     }
 }

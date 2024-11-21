@@ -1,8 +1,9 @@
 package com.llwiseSaying.Controller;
 
 import com.llwiseSaying.Service.WiseSayingService;
+import com.llwiseSaying.State;
 import com.llwiseSaying.WiseSaying;
-
+import static com.llwiseSaying.App.br;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,36 +12,35 @@ import java.util.Map;
 
 public class WiseSayingController {
 
+
     public WiseSayingService wiseSayingService=new WiseSayingService();
 
     String inputValue;
-    BufferedReader br;
-    public void run() throws IOException {
 
-        System.out.println("== 명언 앱 ==");
-        System.out.println("명령어 -> 종료, 등록, 목록, 삭제, 수정, 초기화");
-        System.out.println("삭제와 수정 명령어 형식 ( 삭제?id=1 )");
+
+    public WiseSayingController() {
         init();
+    }
 
-        while(true) {
+    public State run(String inputValue) throws IOException {
 
-            System.out.print("명령) ");
-            inputValue = br.readLine();
+        State state=State.PROCESS;
+        this.inputValue=inputValue;
 
-            if(inputValue ==null) { break; }
+        if(inputValue ==null) { state=State.EXIT; }
+        if(inputValue.equals("종료")) { exitProcess(); state= State.EXIT;}
+        if(inputValue.equals("등록")) { enrollProcess(); }
+        if(inputValue.equals("목록")) { viewProcess(); }
+        if(inputValue.startsWith("삭제")) { deleteProcess(); }
+        if(inputValue.startsWith("수정")) { modifyProcess(); }
+        if(inputValue.equals("초기화")) { resetProcess(); state=State.EXIT; }
 
-            if(inputValue.equals("종료")) { exitProcess(); break; }
-            if(inputValue.equals("등록")) { enrollProcess(); }
-            if(inputValue.equals("목록")) { viewProcess(); }
-            if(inputValue.startsWith("삭제")) { deleteProcess(); }
-            if(inputValue.startsWith("수정")) { modifyProcess(); }
-            if(inputValue.equals("초기화")) { resetProcess(); break;}
+        return state;
 
-        }
     }
 
     void init() {
-        br=new BufferedReader(new InputStreamReader(System.in));
+
         wiseSayingService.init();
     }
 
@@ -113,11 +113,13 @@ public class WiseSayingController {
     void resetProcess() {
         wiseSayingService.reset();
 
+
     }
 
     void exitProcess() {
         wiseSayingService.saveId();
         System.out.println("프로그램 종료");
+
     }
 
     void saveId() {

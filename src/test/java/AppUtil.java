@@ -1,8 +1,6 @@
-import org.junit.jupiter.api.Test;
-
 import java.io.*;
 
-public class AppTest {
+public class AppUtil {
 
     public static void setSystemIn(final String input) {
 
