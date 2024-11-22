@@ -4,11 +4,10 @@ import com.llwiseSaying.Service.WiseSayingService;
 import com.llwiseSaying.State;
 import com.llwiseSaying.WiseSaying;
 import static com.llwiseSaying.App.br;
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Map;
+
 
 public class WiseSayingController {
 
@@ -60,32 +59,56 @@ public class WiseSayingController {
         String cmd=inputValue;
         String keywordType="none";
         String keyword="none";
-        String [] splitData;
-        //목록?searchKeyword?page=3
-        if(wiseSayingService.containSerachKeyword(cmd)) {
-            try {
-                splitData=wiseSayingService.separateKeywordTypeAndKeyword(cmd);
-                //index 0 -> type index 1 -> keyword
-                keywordType=splitData[0];
-                keyword=splitData[1];
-                System.out.println("---------------------");
-                System.out.println("검색타입 : "+keywordType);
-                System.out.println("검색어 : "+keyword);
-                System.out.println("---------------------");
+        int page=1;
 
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-                return;
+        String [] splitQuery;
+        splitQuery=cmd.split("\\?");
+
+        for(String query : splitQuery) {
+
+            if (query.equals("목록")) {
+                continue;
             }
+            if (query.startsWith("keywordType")) {
+                String[] splitData;
+                try {
+                    splitData = wiseSayingService.separateKeywordTypeAndKeyword(query);
+                } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                    return;
+                }
+                keywordType = splitData[0];
+                keyword = splitData[1];
+
+                System.out.println("---------------------");
+                System.out.println("검색타입 : " + keywordType);
+                System.out.println("검색어 : " + keyword);
+                System.out.println("---------------------");
+            }
+
+            if (query.startsWith("page")) {
+                page=wiseSayingService.separatePage(query);
+            }
+
+
         }
 
+            System.out.println("번호 / 작가 / 명언");
+            System.out.println("----------------------");
 
-        System.out.println("번호 / 작가 / 명언");
-        System.out.println("----------------------");
+            List<String> wiseSayingList=wiseSayingService.getWiseSayingList(keywordType,keyword,page);
+            //명언 리스트를 가져올때 마지막 요소에 총 페이지 수를 저장해 가져온다
+            int totalPage=Integer.parseInt(wiseSayingList.getLast());
+            wiseSayingList.removeLast();
+            //최대 페이지수를 넘지않고 설정
+            page=Math.min(totalPage,page);
 
-        List<String> wiseSayingList=wiseSayingService.getWiseSayingList(keywordType,keyword);
-        wiseSayingList.stream()
-                .forEach(s -> System.out.println(s));
+            wiseSayingList.stream()
+                    .forEach(s -> System.out.println(s));
+            System.out.println("----------------------");
+            System.out.println("페이지: "+page+" / ["+totalPage+"]");
+
+
     }
 
     void deleteProcess() {
@@ -136,7 +159,6 @@ public class WiseSayingController {
 
     void resetProcess() {
         wiseSayingService.reset();
-
 
     }
 

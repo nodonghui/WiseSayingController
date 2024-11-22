@@ -22,4 +22,6 @@ public class Vaildation {
     public void vaildationKeyword2(String expected,String actual) {
         if(!expected.equals(actual)) {throw  new IllegalArgumentException("명령어 형식을 맞춰주세요");}
     }
+
+
 }

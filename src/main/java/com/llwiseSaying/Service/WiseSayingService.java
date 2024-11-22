@@ -12,6 +12,8 @@ import java.util.Map;
 
 public class WiseSayingService {
 
+    final int PAGESIZE=5;
+
     public  WiseSayingRepository wiseSayingRepository=new WiseSayingRepository();
     Vaildation vaildation=new Vaildation();
     ConvertData convertData=new ConvertData();
@@ -34,28 +36,53 @@ public class WiseSayingService {
         return id-1;
     }
 
-    public List<String> getWiseSayingList(String keywordType,String keyword) {
-        List<String> wiseSayingList=new ArrayList<>();
+    public List<String> getWiseSayingList(String keywordType,String keyword,int page) {
+        List<WiseSaying> wiseSayingList=new ArrayList<>();
+        //index관리를 위해 1부터 시작하도록
+
+
         String searchResult="";
-        String result="";
+        WiseSaying result;
         for (Map.Entry<Integer, WiseSaying> entry : wiseSayings.entrySet()) {
-            result=entry.getValue().toString();
+            result=entry.getValue();
 
             if(keywordType.equals("author")){ searchResult=entry.getValue().getWriter(); }
             if(keywordType.equals("content")){ searchResult=entry.getValue().getContent(); }
+
             if(containKeyword(keyword,searchResult)) {
                 wiseSayingList.add(result);
             }
 
         }
 
-        Collections.reverse(wiseSayingList);
+        List<String> PagingWiseSayingList=makePagingList(wiseSayingList,page);
 
-        return wiseSayingList;
+        return PagingWiseSayingList;
     }
 
     public boolean containKeyword(String keyword,String searchResult) {
         return keyword.equals("none") || searchResult.contains(keyword);
+    }
+
+    List<String> makePagingList(List<WiseSaying> wiseSayingList,int page) {
+        List<String> pagingWiseSayingList=new ArrayList<>();
+
+        int totalWiseSaying=wiseSayingList.size();
+        int offset=(page-1)*PAGESIZE;
+        int totalPage=(totalWiseSaying/PAGESIZE)+1;
+        //만약 최대 범위가 리스트 범위를 넘어서면 리스트 최대 크기로 설정한다.
+        int maxRange=Math.min(offset+PAGESIZE,totalWiseSaying);
+        for(int i=offset;i<(maxRange);i++) {
+            pagingWiseSayingList.add(wiseSayingList.get(i).toString());
+        }
+
+        //최근 게시물부터 출력
+        Collections.reverse(pagingWiseSayingList);
+        //마지막 요소값에 전체 페이지 수를 저장한다.
+        //출력시 마지막 요소값 제외하고 출력하면됨
+        pagingWiseSayingList.add(String.valueOf(totalPage));
+
+        return pagingWiseSayingList;
     }
 
 
@@ -103,8 +130,12 @@ public class WiseSayingService {
         return !cmd.equals("목록");
     }
 
-    public String[] separateKeywordTypeAndKeyword(String cmd) {
-        return convertData.splitSearchCmd(cmd);
+    public String[] separateKeywordTypeAndKeyword(String query) {
+        return convertData.splitSearchQuery(query);
+    }
+
+    public int separatePage(String query) {
+        return convertData.splitPage(query);
     }
 
 }

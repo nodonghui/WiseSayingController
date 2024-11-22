@@ -13,13 +13,11 @@ public class ConvertData {
         return Integer.parseInt(splitData2[1]);
     }
 
-    public String [] splitSearchCmd(String cmd) {
-        vaildation.vaildationKeyword(cmd,"\\?");
-        String[] splitData1=cmd.split("\\?");
+    public String [] splitSearchQuery(String query) {
 
-        vaildation.vaildationKeyword(splitData1[1],"&");
-        String[] splitData2=splitData1[1].split("&");
 
+        vaildation.vaildationKeyword(query,"&");
+        String[] splitData2=query.split("&");
         vaildation.vaildationKeyword(splitData2[0],"=");
         String[] splitDataType=splitData2[0].split("=");
         vaildation.vaildationKeyword2("keywordType",splitDataType[0]);
@@ -34,5 +32,13 @@ public class ConvertData {
         result[1]=splitDataKeyword[1];
 
         return result;
+    }
+
+    public int splitPage(String query) {
+        vaildation.vaildationKeyword(query,"=");
+        String [] result=query.split("=");
+        int page=Integer.parseInt(result[1]);
+
+        return page;
     }
 }
