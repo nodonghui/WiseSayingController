@@ -58,15 +58,5 @@ public class workspace {
                 .contains("1 / 안녕로봇 / 안녕 안녕");
     }
 
-    @Test
-    @DisplayName("convetData")
-    void convertDataTest() {
-        ConvertData convertData=new ConvertData();
 
-        String cmd="목록?keywordType=author&keyword=작자";
-        String[] actualArray=convertData.splitSearchCmd(cmd);
-        String[] expectedArray={"author","작자"};
-
-        assertArrayEquals(expectedArray, actualArray, "The arrays are not equal!");
-    }
 }

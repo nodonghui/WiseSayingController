@@ -34,10 +34,10 @@ public class ConvertData {
         return result;
     }
 
-    public int splitPage(String query) {
+    public String splitPage(String query) {
         vaildation.vaildationKeyword(query,"=");
         String [] result=query.split("=");
-        int page=Integer.parseInt(result[1]);
+        String page=result[1];
 
         return page;
     }

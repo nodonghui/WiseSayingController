@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Arrays;
 
 import static com.llwiseSaying.Repository.WiseSayingRepository.DBdirectoryPath;
 
@@ -20,8 +21,16 @@ public class LoadWiseSayingList {
         Map<Integer,WiseSaying> wiseSayings=new LinkedHashMap<>();
 
         File[] files = directory.listFiles();
+
+        //lastId.txt파일 필터링
+        File[] jsonFiles = Arrays.stream(files)
+                .filter(file -> file.getName().endsWith(".json")) // .json으로 끝나는 파일만 포함
+                .toArray(File[]::new);
+
+        File[] sortFiles=sortFileData(jsonFiles);
+
         if (files != null) {
-            for (File file : files) {
+            for (File file : sortFiles) {
                 if(file.getPath().endsWith(".txt")) { continue;}
                 WiseSaying wiseSaying=parseJsonData(file);
                 wiseSayings.put(wiseSaying.getId(),wiseSaying);
@@ -30,6 +39,21 @@ public class LoadWiseSayingList {
 
         return wiseSayings;
     }
+
+    File [] sortFileData(File [] files) {
+
+        Arrays.sort(files, (f1, f2) -> {
+            String name1 = f1.getName();
+            String name2 = f2.getName();
+            // 숫자를 기준으로 정렬
+            int num1 = Integer.parseInt(name1.replace(".json", ""));
+            int num2 = Integer.parseInt(name2.replace(".json", ""));
+            return Integer.compare(num1, num2);
+        });
+
+        return files;
+    }
+
 
     WiseSaying parseJsonData(File file) {
 

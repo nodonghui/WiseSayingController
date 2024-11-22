@@ -12,18 +12,21 @@ import java.util.Map;
 
 public class WiseSayingService {
 
-    final int PAGESIZE=5;
+    private final int PAGESIZE=5;
+    private Map<Integer, WiseSaying> wiseSayings;
+    private int id;
 
     public  WiseSayingRepository wiseSayingRepository=new WiseSayingRepository();
     Vaildation vaildation=new Vaildation();
     ConvertData convertData=new ConvertData();
 
-    Map<Integer, WiseSaying> wiseSayings;
-    int id;
+
     public void init() {
         id= wiseSayingRepository.loadId();
         wiseSayings=wiseSayingRepository.loadWiseSays();
     }
+
+    ///////////////////////////////////////////////////////
 
     public int enrollWiseSaying(String content,String writer) {
         WiseSaying wiseSaying=new WiseSaying(id,content,writer);
@@ -36,10 +39,23 @@ public class WiseSayingService {
         return id-1;
     }
 
+    public void makeDummyData(int size) {
+        String content="임의의 내용";
+        String writer="익명의 글쓴이";
+        for(int i=1;i<=size;i++) {
+            WiseSaying wiseSaying=new WiseSaying(id,content+id,writer+id);
+            wiseSayings.put(id,wiseSaying);
+            id+=1;
+            wiseSayingRepository.makeWiseSayingFile(wiseSaying);
+        }
+
+    }
+
+    ///////////////////////////////////////////////////////
+
     public List<String> getWiseSayingList(String keywordType,String keyword,int page) {
         List<WiseSaying> wiseSayingList=new ArrayList<>();
         //index관리를 위해 1부터 시작하도록
-
 
         String searchResult="";
         WiseSaying result;
@@ -67,17 +83,17 @@ public class WiseSayingService {
     List<String> makePagingList(List<WiseSaying> wiseSayingList,int page) {
         List<String> pagingWiseSayingList=new ArrayList<>();
 
-        int totalWiseSaying=wiseSayingList.size();
+        int totalWiseSaying=wiseSayingList.size()-1;
         int offset=(page-1)*PAGESIZE;
+        int startIndex=Math.max(totalWiseSaying-offset,-1);
+        int endIndex=Math.max(startIndex-PAGESIZE,-1);
         int totalPage=(totalWiseSaying/PAGESIZE)+1;
         //만약 최대 범위가 리스트 범위를 넘어서면 리스트 최대 크기로 설정한다.
-        int maxRange=Math.min(offset+PAGESIZE,totalWiseSaying);
-        for(int i=offset;i<(maxRange);i++) {
+        //역순으로 접근하자 최근게시물부터 나와야함
+        for(int i=startIndex;i>endIndex;i--) {
             pagingWiseSayingList.add(wiseSayingList.get(i).toString());
         }
 
-        //최근 게시물부터 출력
-        Collections.reverse(pagingWiseSayingList);
         //마지막 요소값에 전체 페이지 수를 저장한다.
         //출력시 마지막 요소값 제외하고 출력하면됨
         pagingWiseSayingList.add(String.valueOf(totalPage));
@@ -85,13 +101,15 @@ public class WiseSayingService {
         return pagingWiseSayingList;
     }
 
-
-    public int containId(String cmd) {
-        int id=convertData.splitDeleteAndModifyCmd(cmd);
-        vaildation.vaildationId(id,wiseSayings);
-        return id;
+    public String[] separateKeywordTypeAndKeyword(String query) {
+        return convertData.splitSearchQuery(query);
     }
 
+    public String separatePage(String query) {
+        return convertData.splitPage(query);
+    }
+
+    ///////////////////////////////////////////////////////
 
     public void deleteWiseSaying(int id) {
 
@@ -99,8 +117,6 @@ public class WiseSayingService {
         wiseSayingRepository.deleteWiseSayingFile(id);
 
     }
-
-
 
     public WiseSaying findWiseSaying(int id) {
         return wiseSayings.get(id);
@@ -116,6 +132,14 @@ public class WiseSayingService {
 
     }
 
+    public int containId(String cmd) {
+        int id=convertData.splitDeleteAndModifyCmd(cmd);
+        vaildation.vaildationId(id,wiseSayings);
+        return id;
+    }
+
+    ///////////////////////////////////////////////////////
+
     public void reset() {
         wiseSayingRepository.reset();
         wiseSayings.clear();
@@ -125,17 +149,8 @@ public class WiseSayingService {
         wiseSayingRepository.saveId(id-1);
     }
 
-    public boolean containSerachKeyword(String cmd) {
 
-        return !cmd.equals("목록");
-    }
 
-    public String[] separateKeywordTypeAndKeyword(String query) {
-        return convertData.splitSearchQuery(query);
-    }
 
-    public int separatePage(String query) {
-        return convertData.splitPage(query);
-    }
 
 }

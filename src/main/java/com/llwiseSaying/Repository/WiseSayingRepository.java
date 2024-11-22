@@ -13,6 +13,8 @@ public class WiseSayingRepository {
 
     public static String DBdirectoryPath = "db/wiseSaying";
 
+    ///////////////////////////////////////////////////////
+
     public int loadId() {
 
         int id=idGenerator.loadFile();
@@ -24,7 +26,10 @@ public class WiseSayingRepository {
         return loadWiseSayingList.loadWiseSayings();
     }
 
+    ///////////////////////////////////////////////////////
+
     public void makeWiseSayingFile(WiseSaying wiseSaying) {
+        //수정과 생성 같이 사용한다.
         wiseSayingGenerator.wirteFile(wiseSaying);
     }
 
