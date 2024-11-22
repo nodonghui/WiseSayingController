@@ -93,7 +93,7 @@ public class WiseSayingController {
                 .forEach(s -> System.out.println(s));
 
         System.out.println("----------------------");
-        System.out.println("페이지: "+page+" / ["+totalPage+"]");
+        System.out.println("페이지 : "+page+" / ["+totalPage+"]");
 
 
     }

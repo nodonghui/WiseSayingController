@@ -85,6 +85,89 @@ public class WiseSayingControllerTest {
     }
 
     @Test
+    @DisplayName("검색 테스트1")
+    void testSearch1() throws IOException {
+        String simulatedInput="""
+                등록
+                현재를 사랑하라.
+                작자미상
+                등록
+                안녕하세요.
+                친구
+                목록?keywordType=content&keyword=안녕하세요
+                초기화
+                """;
+
+        AppUtil.setSystemIn(simulatedInput);
+
+        App app=new App();
+        app.run();
+        String capturedOutput = output.toString();
+
+
+        assertThat(capturedOutput)
+                .doesNotContain("1 / 작자미상 / 현재를 사랑하라.")
+                .contains("2 / 친구 / 안녕하세요.");
+
+
+    }
+
+    @Test
+    @DisplayName("검색 테스트2")
+    void testSearch2() throws IOException {
+        String simulatedInput="""
+                등록
+                현재를 사랑하라.
+                작자미상
+                등록
+                안녕하세요.
+                친구
+                목록?keywordType=author&keyword=친구
+                초기화
+                """;
+
+        AppUtil.setSystemIn(simulatedInput);
+
+        App app=new App();
+        app.run();
+        String capturedOutput = output.toString();
+
+
+        assertThat(capturedOutput)
+                .doesNotContain("1 / 작자미상 / 현재를 사랑하라.")
+                .contains("2 / 친구 / 안녕하세요.");
+
+
+    }
+
+    @Test
+    @DisplayName("페이징 테스트2")
+    void testPaging() throws IOException {
+        String simulatedInput="""
+                등록
+                현재를 사랑하라.
+                작자미상
+                등록
+                안녕하세요.
+                친구
+                목록?page=1
+                초기화
+                """;
+
+        AppUtil.setSystemIn(simulatedInput);
+
+        App app=new App();
+        app.run();
+        String capturedOutput = output.toString();
+
+
+        assertThat(capturedOutput)
+                .contains("페이지 : 1 / [1]");
+
+
+    }
+
+    @Test
     @DisplayName("삭제 테스트")
     void testDelete() throws IOException {
         String simulatedInput="""
